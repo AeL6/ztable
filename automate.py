@@ -16,3 +16,5 @@ with open('./ztable.txt', 'r') as f:
 
         # format it to be a valid javascript array
         print(f"['{_index}', {_newline},],")
+
+        
