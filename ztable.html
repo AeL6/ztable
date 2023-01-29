@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Z-Table & Z-Score</title>
+    <style></style>
+  </head>
+  <body>
+    <script src="./ztable.js"></script>
+    <script>
+      // return the z-score using the formula:
+      // (x - mean) / standard deviation
+      function processZScore(x, m, sd) {
+        // Math.round((x - m) / sd * 100) / 100 would work
+        // but Number.EPSILON allows me to have higher accuracy
+        return Math.round(((x - m) / sd + Number.EPSILON) * 100) / 100
+      }
+
+      // turn the processed z-score float/decimal value into string
+      function numberToString(num) {
+        // get the absolute value of a number; removes negative sign
+        num = Math.abs(num)
+
+        // check if the value is a valid integer
+        if (Number.isInteger(num)) {
+          // if it is, add '.00' to it and it becomes a string
+          return num + '.00'
+        } else {
+          // if not, then turn it to a string
+          return num.toString()
+        }
+      }
+
+      // navigate through ztable.js and get the value of the area
+      function processArea(input) {
+        // row or the first 3 characters in the float is stored here
+        // basically takes the input and only gets the first 3 characters
+        // 1.62 -> 1.6
+        let _row = input.substring(0, 3)
+
+        // column or the last character in the float
+        // takes input and only takes the last character (-1)
+        // 1.62 -> 2
+        let _column = input.slice(-1)
+
+        // an array to use for checking the value using the indexes given
+        // parseInt turns the column value into a valid integer
+        // did not do this for the row since I wanted the row to be more of a label
+        // [1.6, 2]
+        let _index = [_row, parseInt(_column)]
+
+        // goes through the entire table one by one and checks if it matches the condition
+        for (let i = 0; i < zTable.length; i++) {
+          // zTable[i] means the current iteration or the current row in the table
+          // zTable[i][0] holds the label of each row
+          // it then compares it to _index[0] which is the first 3 characters from earlier
+          // '0.0' == '1.6'
+          if (zTable[i][0] == _index[0]) {
+            // if it matches, then it will return the value in the following:
+            // zTable[i][1] is the array which holds the values of each column
+            // _index[1] is the parsed integer from earlier
+            // zTable[i][1][_index[1]] gets the value from the column using the index
+            return zTable[i][1][_index[1]]
+          }
+          // if it fails the match, then it just moves on to the next row
+        }
+      }
+
+      // basically just a float/decimal to percentage converter
+      function areaProbability(area) {
+        // uses template strings to immediately add the percentage symbol
+        return `${area * 100}%`
+      }
+    </script>
+  </body>
+</html>
